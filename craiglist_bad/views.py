@@ -12,7 +12,7 @@ BASE_IMG_URL = 'https://images.craiglist.org/{}_300x300.jpg'
 
 # Create your views here.   
 def home(request):
-    return render(request, 'base.html')
+    return render(request, 'craiglist_bad/index.html')
 
 
 def new_search(request):

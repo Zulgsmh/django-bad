@@ -1,10 +1,19 @@
 {% extends 'base.html' %}
 
-{% block content %}
+{% load static %}
 
+<link rel="stylesheet" type="text/css" href="{% static 'craiglist_bad/css/style.css' %}" />
+
+
+
+{% block content %}
+<br/>
+<br/>
 <div class="center">
     <h2 style="text-align: center">{{ search | title }}</h2>
 
+<br/>
+<div class="container">
     <div class="row">
     {% for post in final_postings %}
         <div class="col s4 sm2">
@@ -23,5 +32,6 @@
         </div>
     {% endfor %}
     </div>
+</div>
 
 {% endblock content %}  

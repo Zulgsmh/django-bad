@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Actu bad</title>
-    <link rel="stylesheet" href="{% static "css/style.css" %}">
+    <!-- <link rel="stylesheet" href="{# static 'css/style.css' #}"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -16,21 +16,48 @@
 </head>
 <body>
 
+
+<!-- Dropdown Structure -->
+<ul id="dropdown1" class="dropdown-content">
+  <li><a href="#!">one</a></li>
+  <li><a href="#!">two</a></li>
+  <li class="divider"></li>
+  <li><a href="#!">three</a></li>
+</ul>
 <nav>
     <div class="container nav-wrapper">
         <a  class="brand-logo" style="font-family: cursive">Assgabad</a>
             <ul id="nav-mobile" class="right">
                 <li><a href="/">Home</a> </li>
                 <li><a href="/">Actu Bad</a> </li>
+                <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Dropdown<i class="material-icons right">arrow_drop_down</i></a></li>
+                {% if user.is_authenticated %}
+                <li><a href="/security/space">{{user.username}}</a> </li>
                 <li><a href="/">Tournois</a> </li>
-                <li><a href="/">Connexion</a> </li>
+                <li><a class="waves-effect waves-light btn" href="/security/logout">Déconnexion</a> </li>
+                {% else %}
+                <li><a class="waves-effect waves-light btn" href="/security/login">Connexion</a> </li>
+                {% endif %}
             </ul>
     </div>
 </nav>
 
-        {% block content %}
+{% if messages %}
+    {% for message in messages %}
+        {% if message.tags == 'success' %}
+            <script>M.toast({html: "{{message}}", classes: 'green rounded', displayLength:2000})</script>
+        {% elif message.tags == 'info' %}
+            <script>M.toast({html: "{{message}}", classes: 'blue rounded', displayLength:2000})</script>
+        {% elif message.tags == 'warning' %}
+            <script>M.toast({html: "{{message}}", classes: 'orange rounded', displayLength:5000})</script>
+        {% elif message.tags == 'error' %}
+            <script>M.toast({html: "{{message}}", classes: 'red rounded', displayLength:5000})</script>
+        {% endif %}
+    {% endfor %}
+{% endif %}
 
-        {% endblock content %}
+{% block content %}
+{% endblock content %}
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
