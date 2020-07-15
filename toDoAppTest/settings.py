@@ -26,8 +26,13 @@ SECRET_KEY = '(yd(63owv_r3nitcpl-(0^!r!1g7--4cjnw1_-1tna4+(*2j__'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
+LOGIN_URL = "/login"
+
+MAX_TWEET_LENGTH = 240
+
+TWEET_ACTION_OPTIONS = ["like","unlike","retweet"]
 
 # Application definition
 
@@ -38,11 +43,32 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'corsheaders', #add for react
+]
+
+#----------------------------------
+INSTALLED_APPS = [
+
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'todo.apps.TodoConfig',
+    'polls.apps.PollsConfig',
+    'craiglist_bad',
+    'tweets',
+    'rest_framework',
+
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+     #add for react
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -119,24 +145,42 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_URL_TWEET_REACT = '/static/assga-tweet-web'
+
+
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
-    '/var/www/static',
+    #'/var/www/static',
 ]
 
+STATIC_ROOT = os.path.join(BASE_DIR, "static-root")
 
+# add for react ( any website has access to my api)
+CORS_ORIGIN_ALLOW_ALL = True 
+CORS_URLS_REGEX = r'^/tweets/api/.*$'
 
-
-#----------------------------------
-INSTALLED_APPS = [
-    'todo.apps.TodoConfig',
-    'polls.apps.PollsConfig',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'craiglist_bad',
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:8000/tweets/api/all",
+    "http://localhost:8000/tweets/api/create_tweet",
+    "http://localhost:8000/tweets/api/action",
+    "http://localhost:8000/tweets/api/<int:tweet_id>/delete",
 ]
+
+DEFAULT_RENDERER_CLASSES = [
+        'rest_framework.renderers.JSONRenderer',
+    ]
+
+if DEBUG:
+    DEFAULT_RENDERER_CLASSES += [
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ] 
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [ 
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_RENDERER_CLASSES': DEFAULT_RENDERER_CLASSES
+}
+
+
